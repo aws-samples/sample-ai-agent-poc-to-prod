@@ -1,0 +1,1 @@
+"""The agent/application: builds the Strands+Bedrock agent whose system prompt carries no schedule structure, plus config and run-level observability reporting. CLI is the entry; a thin service is optional."""
