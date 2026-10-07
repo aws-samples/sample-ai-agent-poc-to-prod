@@ -1,0 +1,7 @@
+{
+  "task_id": "task-conference-concierge",
+  "task_description": "Implement the production-grade, clearly-layered Conference Schedule Concierge demo for All Things Open 2026, built on a governed versioned semantic layer the agent reads at runtime, verified by a deterministic ten-check eval that runs with NO model and NO network. Build exactly to .agents/tasks/design.md (sections 1-13).",
+  "status": "completed",
+  "feature_order": ["FEAT-001", "FEAT-002", "FEAT-003"],
+  "blocked_reason": null
+}
