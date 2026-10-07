@@ -1,0 +1,6 @@
+track_id,track_name,theme
+infra,Infrastructure & Ops,"Containers, Kubernetes, observability"
+community,Open Source Community,"Licensing, contribution, governance"
+ai,AI & Agents,"LLMs, agents, applied ML"
+career,Career & Growth,"Pivots, early career, mentorship"
+devtools,Developer Tools,"Editors, CLIs, productivity"

@@ -1,0 +1,11 @@
+session_id,title,track_id,room_id,day,start,end
+S01,Getting Started with Containers,infra,A,Mon,10:00,10:45
+S02,Scaling Kubernetes in Production,infra,A,Mon,11:00,11:45
+S03,Intro to Open Source Licensing,community,B,Mon,10:00,10:45
+S04,Your First Open Source Contribution,community,B,Mon,11:00,11:45
+S05,Building AI Agents 101,ai,C,Tue,10:00,10:45
+S06,Production-Grade Agent Architectures,ai,C,Tue,11:00,11:45
+S07,Observability for Microservices,infra,A,Tue,10:00,10:45
+S08,Career Pivots into Tech,career,D,Tue,11:00,11:45
+S09,Lightning Talks: Dev Tools,devtools,B,Tue,14:00,14:45
+S10,Panel: The Future of Open Source,community,Main,Tue,15:00,15:45
