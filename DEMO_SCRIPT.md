@@ -10,7 +10,7 @@
 > **OS-command note.** The demo laptop may be Windows (PowerShell) or Unix. The
 > Beat-1 structure scan below ships in both forms — `Select-String` (PowerShell)
 > and `grep -iE` (macOS/Linux). The eval is invoked the same shell-agnostic way
-> on every OS: `cd` into the project, then `python eval_runner.py`.
+> on every OS: `cd` into the project, then `python evaluation.py`.
 
 ---
 
@@ -34,9 +34,9 @@ It's a conference assistant, demoed at a conference, for people who've spent two
 
 | Beat | Time | On screen | What you SAY (gist) |
 |------|------|-----------|---------------------|
-| 0. Setup | 0:00–0:30 | Project tree (the four packages) | "One agent, a conference schedule across four sources. The tree **is** the architecture diagram. Watch *where* the logic that relates them lives." |
-| 1. The prototype trap | 0:30–1:30 | `concierge/agent.py` prompt | "The naive build hardcodes 'this track is in that room' into the prompt. Works day one; drifts the moment the schedule changes." |
-| 2. The turn — semantic layer | 1:30–3:00 | `semantic/*.md` (+ `schema.json`) | "Pull it out into a governed, versioned layer: catalog, term map, join rules. The agent reads it at runtime." |
+| 0. Setup | 0:00–0:30 | Project tree (the ~6 flat files) | "One agent, a conference schedule across four sources. The tree **is** the architecture diagram. Watch *where* the logic that relates them lives." |
+| 1. The prototype trap | 0:30–1:30 | `agent.py` prompt | "The naive build hardcodes 'this track is in that room' into the prompt. Works day one; drifts the moment the schedule changes." |
+| 2. The turn — semantic layer | 1:30–3:00 | `semantic/*.md` | "Pull it out into a governed, versioned layer: catalog, term map, join rules. The agent reads it at runtime." |
 | 3. Run it | 3:00–4:00 | `python main.py "..."` | "Same agent. Reads the layer, joins on the keys, cites the source of each fact, and flags the room it can't find as TBD instead of inventing it." |
 | 4. Build once, use everywhere | 4:00–5:00 | edit `data/`, re-run | "Add a track and a talk by editing the *data*, not the code. Re-run — it just appears." |
 
@@ -45,12 +45,12 @@ It's a conference assistant, demoed at a conference, for people who've spent two
 ## Full narration + actions
 
 ### Beat 0 — Setup (0:00–0:30)
-**Action:** show the project tree — point at the four packages `data_platform/ semantic/ orchestration/ concierge/` (plus the `observability/` leaf and `evaluation/`).
+**Action:** show the project tree — point at the ~6 flat files `data_platform.py semantic.py orchestration.py agent.py evaluation.py main.py` and the `semantic/` folder of governed markdown.
 **Say:**
-> "This is a concierge for a conference — four data sources: the sessions, the tracks, the rooms, and the speakers. Those four packages? That's the architecture diagram — the tree *is* the diagram, each layer depending only on the one below it. I'll ask it the kind of thing you've all asked this week: what's on, who's speaking, which room. The whole demo is about one question — where does the agent's knowledge of how these connect actually live?"
+> "This is a concierge for a conference — four data sources: the sessions, the tracks, the rooms, and the speakers. Six small files, one per layer — that's the architecture diagram, the tree *is* the diagram, each file reading only the one below it. I'll ask it the kind of thing you've all asked this week: what's on, who's speaking, which room. The whole demo is about one question — where does the agent's knowledge of how these connect actually live?"
 
 ### Beat 1 — The prototype trap (0:30–1:30)
-**Action:** open `concierge/agent.py`, show the `SYSTEM_PROMPT`.
+**Action:** open `agent.py`, show the `SYSTEM_PROMPT`.
 **Say:**
 > "In most prototypes it lives in the prompt: 'the AI track is in Room C, speakers are in this file, join them like so.' It works for today's schedule. Then a room changes, a track is added, a talk moves — and the prompt becomes an unversioned, untested place that drifts every edit. That's the prototype that doesn't survive contact with a real, changing schedule."
 >
@@ -68,7 +68,7 @@ PowerShell (Windows):
 # positive control — joins.md legitimately contains the structural tokens -> MATCH
 Select-String -Path semantic/joins.md -Pattern 'track_id|room_id|sessions'
 # the proof — the agent prompt carries no structure -> NO MATCHES (empty output)
-Select-String -Path concierge/agent.py -Pattern 'track_id|room_id|sessions'
+Select-String -Path agent.py -Pattern 'track_id|room_id|sessions'
 ```
 
 macOS/Linux:
@@ -76,7 +76,7 @@ macOS/Linux:
 # positive control -> MATCH
 grep -iE "track_id|room_id|sessions" semantic/joins.md
 # the proof -> nothing printed, exit code 1
-grep -iE "track_id|room_id|sessions" concierge/agent.py
+grep -iE "track_id|room_id|sessions" agent.py
 ```
 
 Escaping note: with `grep -iE` (extended regex) and with `Select-String` (.NET
@@ -84,16 +84,16 @@ regex) the pipe is alternation **only when unescaped**. The `\|` form is correct
 exclusively for *basic* regex (`grep`/`grep -G`), which this demo does not use.
 Do not escape the pipe in either command.
 
-Cross-platform alternative (the authoritative proof): `python eval_runner.py` —
-check #5 (`test_prompt_carries_no_structure`) proves the same thing in code.
+Cross-platform alternative (the authoritative proof): `python evaluation.py` —
+check #5 (`prompt_no_structure`) proves the same thing in code.
 
 ### Beat 2 — The turn: a served semantic layer (1:30–3:00)
-**Action:** open the three files in `semantic/`, then show `semantic/schema.json` as the machine mirror.
+**Action:** open the three files in `semantic/`, then point at the small source dict in `semantic.py` as the machine-readable mirror of `sources.md`.
 **Say:**
 > - `sources.md`: "A catalog — the four sources and their keys. Add a row to add a source."
 > - `field_map.md`: "Attendee words → columns. 'Talk', 'who', 'where' map to real fields here, as governed content."
 > - `joins.md`: "The important one: the keys — a talk joins to its track by `track_id`, its room by `room_id`, its speakers by `session_id` — plus the rules: cite the source of every fact, and if something's missing, say TBD. Never invent."
-> - `schema.json`: "And here's the machine-readable mirror the data platform and the eval actually consume — same content, versioned."
+> - `semantic.py`'s `list_sources()` dict: "And here's the one small place code mirrors that catalog — four lines, with a comment saying 'add a row in sources.md and here.' Same content, in code."
 >
 > "This is versioned, reviewable, testable. Any agent — any host — that reads this layer gets the same correct behavior."
 
@@ -105,12 +105,12 @@ check #5 (`test_prompt_carries_no_structure`) proves the same thing in code.
 > *(Then ask the panel question:)* `python main.py "Where is the Future of Open Source panel?"`
 > "Watch this — that panel's room isn't in the room source. A prototype would hallucinate a room. Ours says **room TBD** and tells you why. That honesty *is* the production-grade behavior."
 
-**Fallback (no network):** run `python eval_runner.py` — same join/TBD logic, deterministic, no network. Say: "Let me run our eval so you can see the contract hold without trusting the room's wifi." Ten checks print PASS and the suite ends with "All eval checks passed."
+**Fallback (no network):** run `python evaluation.py` — same join/TBD logic, deterministic, no network. Say: "Let me run our eval so you can see the contract hold without trusting the room's wifi." Nine checks print PASS and the suite ends with "All eval checks passed."
 
-**Observability beat (optional, ~10s):** point at the eval output / run report —
-"and here's the eval score and the layer version in the run record. That
-`{layer_version, quality_score}` pair is how you watch for drift across versions
-in production, without a heavyweight tracing stack — it's a stdlib span."
+**Observability beat (optional, ~10s):** point at the `[timing]` line each tool
+call prints — "that one timing line is the seam: in production this is exactly
+where an OpenTelemetry span goes to watch latency and drift, without a heavyweight
+tracing stack today."
 
 ### Beat 4 — Build once, use everywhere (4:00–5:00)
 **Action:** paste a pre-staged new track row into `data/tracks.csv` + a session into `data/sessions.csv`, re-run a matching question. (Data-only edit — no code change, no reload.)
