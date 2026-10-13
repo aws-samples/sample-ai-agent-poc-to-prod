@@ -1,8 +1,10 @@
-# Conference Schedule Concierge — a Semantic-Layer Agent
+# Conference Schedule Concierge
 
-A single agent that answers attendee questions about a (fictional) conference —
+A small, readable example of an AI agent done the production way. A single agent
+answers attendee questions about a (fictional) conference —
 *"what AI talks are on Tuesday, who's speaking, and in which room?"* — by reading
-a **governed, versioned semantic layer** at runtime.
+a **governed, versioned semantic layer** at runtime. It is built to be read: about
+six short files, one per layer, heavily commented.
 
 **The one idea this project exists to show:**
 
@@ -105,6 +107,19 @@ Two agent-specific risks this design engineers against:
   every read to the data root (so `..`, absolute paths, and symlink-outs cannot
   reach arbitrary files). A malformed id is rejected at the tool boundary by
   `validate_source_id` before any I/O.
+
+## Try it in 30 seconds (no install, no cloud)
+
+The eval runs the whole join engine and guardrails with only the standard
+library — no SDK, no AWS, no network. It is the fastest way to see the project work:
+
+```
+cd "<path to>/poc-to-prod-demo"
+python evaluation.py
+```
+
+Nine checks print PASS and the run ends with "All eval checks passed." Start here,
+then read the code (next section). The live agent (below) adds the Bedrock model.
 
 ## Prerequisites
 
