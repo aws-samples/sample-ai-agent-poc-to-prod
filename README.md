@@ -25,7 +25,7 @@ beneath it (the dependency arrows never point up). The governed semantic layer
 sits in the middle: the agent **reads** it at runtime instead of carrying any
 schedule structure in its prompt.
 
-![Architecture: four layers — main.py (CLI) above agent.py (LAYER 4, Strands agent + structure-free prompt), above orchestration.py (LAYER 3, tools + join engine + guardrails), which reads the governed semantic/ markdown (LAYER 2) at runtime and reads rows from data_platform.py (LAYER 1), which reads data/*.csv.](images/architecture.svg)
+![Architecture: four stacked layers, dependencies pointing down — agent.py (prompt with no schedule structure), orchestration.py (tools + join engine + guardrails), semantic/ (governed markdown, read at runtime), data_platform.py (reads the data). The knowledge lives in the layer, not the prompt.](images/architecture.svg)
 
 The point is where the boxes put things. The knowledge an LLM usually keeps in
 its prompt — which source joins to which, on what key — lives in the **LAYER 2**
