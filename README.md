@@ -20,46 +20,12 @@ framework-agnostic.
 
 ## Architecture — four small layers
 
-Four stacked layers. A question enters at the top and flows down; each layer
-depends only on the layer beneath it (the dependency arrows never point up). The
-governed semantic layer sits in the middle: the agent **reads** it at runtime
-instead of carrying any schedule structure in its prompt.
+A question enters at the top and flows down; each layer depends only on the layer
+beneath it (the dependency arrows never point up). The governed semantic layer
+sits in the middle: the agent **reads** it at runtime instead of carrying any
+schedule structure in its prompt.
 
-```
-      user question                                    answer (with sources cited,
-            │                                            missing data flagged TBD)
-            ▼                                                      ▲
-   ┌──────────────────────────────────────────────────────────────────────┐
-   │  main.py              CLI entry — hand the question to the agent       │
-   └──────────────────────────────────────────────────────────────────────┘
-            │ build + ask
-            ▼
-   ┌──────────────────────────────────────────────────────────────────────┐
-   │  LAYER 4  agent.py        Strands Agent + SYSTEM_PROMPT (no structure) │
-   │                           + .env config (swappable model id)          │
-   └──────────────────────────────────────────────────────────────────────┘
-            │ the agent calls two tools
-            ▼
-   ┌──────────────────────────────────────────────────────────────────────┐
-   │  LAYER 3  orchestration.py                                            │
-   │     get_semantic_layer() ─ query_source() ─ enrich_sessions() (joins) │
-   │     + inline guardrails (validate id · cite · flag TBD · never invent)│
-   └──────────────────────────────────────────────────────────────────────┘
-         │ reads at runtime                      │ reads rows
-         ▼                                        ▼
-   ┌───────────────────────────────┐   ┌──────────────────────────────────┐
-   │  LAYER 2  semantic/  (GOVERNED│   │  LAYER 1  data_platform.py        │
-   │  CONTENT, not code)           │   │  reusable + domain-agnostic:      │
-   │   • sources.md   what exists  │   │  read a source's rows from CSV    │
-   │   • field_map.md words→columns│   │  (no conference words here)       │
-   │   • joins.md     keys + rules │   └──────────────────────────────────┘
-   │  semantic.py = tiny reader    │                   │
-   └───────────────────────────────┘                   ▼
-         ▲                                      ┌───────────────┐
-         └── how the data relates lives HERE,   │  data/*.csv   │
-             NOT in the prompt ◄─────────────── │  (synthetic)  │
-                                                └───────────────┘
-```
+![Architecture: four layers — main.py (CLI) above agent.py (LAYER 4, Strands agent + structure-free prompt), above orchestration.py (LAYER 3, tools + join engine + guardrails), which reads the governed semantic/ markdown (LAYER 2) at runtime and reads rows from data_platform.py (LAYER 1), which reads data/*.csv.](images/architecture.svg)
 
 The point is where the boxes put things. The knowledge an LLM usually keeps in
 its prompt — which source joins to which, on what key — lives in the **LAYER 2**
