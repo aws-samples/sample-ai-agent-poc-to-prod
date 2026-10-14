@@ -18,14 +18,14 @@ contains no source names, no column names, and no join keys. All of that lives i
 agent. Strands is the concrete SDK on screen, but the pattern is model- and
 framework-agnostic.
 
-## Architecture — four small layers
+## Architecture — four layers
 
 A question enters at the top and flows down; each layer depends only on the layer
 beneath it (the dependency arrows never point up). The governed semantic layer
 sits in the middle: the agent **reads** it at runtime instead of carrying any
 schedule structure in its prompt.
 
-![Architecture: four stacked layers, dependencies pointing down — agent.py (prompt with no schedule structure), orchestration.py (tools + join engine + guardrails), semantic/ (governed markdown, read at runtime), data_platform.py (reads the data). The knowledge lives in the layer, not the prompt.](images/architecture.svg)
+![Architecture: four stacked layers, dependencies pointing down — agent.py (prompt with no schedule structure), orchestration.py (tools + join engine + guardrails), semantic/ (governed markdown, read at runtime), data_platform.py (reads the data). A cross-cutting rail spans all four layers: evaluation.py tests every layer and runs in CI, and security guardrails + prompt rules apply least privilege — these wrap the layers rather than being a layer. The knowledge lives in the layer, not the prompt; trust is something you test.](images/architecture.svg)
 
 The point is where the boxes put things. The knowledge an LLM usually keeps in
 its prompt — which source joins to which, on what key — lives in the **LAYER 2**

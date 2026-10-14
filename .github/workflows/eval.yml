@@ -1,0 +1,24 @@
+# Runs the deterministic evaluation on every push and pull request.
+# The eval needs only the Python standard library — no model, no network, no
+# AWS — so it is a fast, reliable gate that proves the semantic-layer contract
+# (right keys, cited sources, partial results flagged, never-invent) holds on
+# every change. This is the "run in CI on every change" promise, made real.
+name: eval
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      # No `pip install` step: the deterministic checks import only the standard
+      # library and the project's own modules. Strands stays uninstalled here,
+      # which also proves the project imports without the SDK present.
+      - name: Run deterministic eval
+        run: python evaluation.py

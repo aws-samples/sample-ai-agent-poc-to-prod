@@ -1,39 +1,56 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="640" height="500" viewBox="0 0 640 500" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="500" viewBox="0 0 760 500" font-family="Segoe UI, Helvetica, Arial, sans-serif">
   <defs>
     <marker id="a" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
       <path d="M0,0 L7,3 L0,6 Z" fill="#64748b"/>
     </marker>
   </defs>
 
-  <rect width="640" height="500" fill="#ffffff"/>
-  <text x="320" y="42" text-anchor="middle" font-size="22" font-weight="700" fill="#0f172a">Four layers · dependencies point down</text>
+  <rect width="760" height="500" fill="#ffffff"/>
+  <text x="300" y="42" text-anchor="middle" font-size="22" font-weight="700" fill="#0f172a">Four layers · dependencies point down</text>
 
   <!-- Layer 4 -->
-  <rect x="150" y="78" width="340" height="60" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
-  <text x="320" y="104" text-anchor="middle" font-size="16" font-weight="700" fill="#0f172a">agent.py</text>
-  <text x="320" y="125" text-anchor="middle" font-size="13" fill="#475569">the agent + a prompt with no schedule structure</text>
+  <rect x="130" y="78" width="340" height="60" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="300" y="104" text-anchor="middle" font-size="16" font-weight="700" fill="#0f172a">agent.py</text>
+  <text x="300" y="125" text-anchor="middle" font-size="13" fill="#475569">the agent + a prompt with no schedule structure</text>
 
-  <line x1="320" y1="138" x2="320" y2="168" stroke="#64748b" stroke-width="2" marker-end="url(#a)"/>
+  <line x1="300" y1="138" x2="300" y2="168" stroke="#64748b" stroke-width="2" marker-end="url(#a)"/>
 
   <!-- Layer 3 -->
-  <rect x="150" y="168" width="340" height="60" rx="8" fill="#ede9fe" stroke="#8b5cf6" stroke-width="1.5"/>
-  <text x="320" y="194" text-anchor="middle" font-size="16" font-weight="700" fill="#0f172a">orchestration.py</text>
-  <text x="320" y="215" text-anchor="middle" font-size="13" fill="#475569">tools + join engine + guardrails</text>
+  <rect x="130" y="168" width="340" height="60" rx="8" fill="#ede9fe" stroke="#8b5cf6" stroke-width="1.5"/>
+  <text x="300" y="194" text-anchor="middle" font-size="16" font-weight="700" fill="#0f172a">orchestration.py</text>
+  <text x="300" y="215" text-anchor="middle" font-size="13" fill="#475569">tools + join engine + guardrails</text>
 
-  <line x1="320" y1="228" x2="320" y2="258" stroke="#64748b" stroke-width="2" marker-end="url(#a)"/>
+  <line x1="300" y1="228" x2="300" y2="258" stroke="#64748b" stroke-width="2" marker-end="url(#a)"/>
 
   <!-- Layer 2 (highlighted) -->
-  <rect x="150" y="258" width="340" height="64" rx="8" fill="#fef3c7" stroke="#d97706" stroke-width="2.5"/>
-  <text x="320" y="285" text-anchor="middle" font-size="16" font-weight="700" fill="#0f172a">semantic/  (governed markdown)</text>
-  <text x="320" y="306" text-anchor="middle" font-size="13" fill="#92400e">how the data relates — read at runtime</text>
+  <rect x="130" y="258" width="340" height="64" rx="8" fill="#fef3c7" stroke="#d97706" stroke-width="2.5"/>
+  <text x="300" y="285" text-anchor="middle" font-size="16" font-weight="700" fill="#0f172a">semantic/  (governed markdown)</text>
+  <text x="300" y="306" text-anchor="middle" font-size="13" fill="#92400e">how the data relates — read at runtime</text>
 
-  <line x1="320" y1="322" x2="320" y2="352" stroke="#64748b" stroke-width="2" marker-end="url(#a)"/>
+  <line x1="300" y1="322" x2="300" y2="352" stroke="#64748b" stroke-width="2" marker-end="url(#a)"/>
 
   <!-- Layer 1 -->
-  <rect x="150" y="352" width="340" height="60" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
-  <text x="320" y="378" text-anchor="middle" font-size="16" font-weight="700" fill="#0f172a">data_platform.py</text>
-  <text x="320" y="399" text-anchor="middle" font-size="13" fill="#475569">reads the data (reusable, domain-agnostic)</text>
+  <rect x="130" y="352" width="340" height="60" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="300" y="378" text-anchor="middle" font-size="16" font-weight="700" fill="#0f172a">data_platform.py</text>
+  <text x="300" y="399" text-anchor="middle" font-size="13" fill="#475569">reads the data (reusable, domain-agnostic)</text>
+
+  <!-- cross-cutting rail: brace spanning all four layers -->
+  <path d="M486 78 h12 v334 h-12" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+  <line x1="498" y1="245" x2="516" y2="245" stroke="#94a3b8" stroke-width="1.5"/>
+
+  <!-- cross-cutting label box -->
+  <rect x="516" y="150" width="214" height="190" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="5 3"/>
+  <text x="623" y="176" text-anchor="middle" font-size="13" font-weight="700" fill="#334155">CROSS-CUTTING</text>
+  <text x="623" y="193" text-anchor="middle" font-size="11.5" fill="#64748b">(wrap every layer, not a layer)</text>
+
+  <text x="534" y="224" font-size="14" font-weight="700" fill="#dc2626">Evaluate</text>
+  <text x="534" y="243" font-size="12" fill="#475569">evaluation.py — tests</text>
+  <text x="534" y="259" font-size="12" fill="#475569">every layer; runs in CI</text>
+
+  <text x="534" y="293" font-size="14" font-weight="700" fill="#3f3b5b">Secure</text>
+  <text x="534" y="312" font-size="12" fill="#475569">guardrails + prompt</text>
+  <text x="534" y="328" font-size="12" fill="#475569">rules; least privilege</text>
 
   <!-- one-line takeaway -->
-  <text x="320" y="458" text-anchor="middle" font-size="14" font-weight="600" fill="#b45309">The knowledge lives in the layer, not the prompt.</text>
+  <text x="380" y="458" text-anchor="middle" font-size="14" font-weight="600" fill="#b45309">The knowledge lives in the layer, not the prompt. Trust is something you test.</text>
 </svg>
