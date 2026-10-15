@@ -13,18 +13,35 @@ import sys
 def main():
     question = " ".join(sys.argv[1:]) or \
         "What AI talks are on Tuesday, who is speaking, and in which room?"
+
+    # Step 1: build the agent. Failures here are setup problems — the SDK is not
+    # installed, or the model/config is missing.
     try:
         from agent import build_agent
         concierge = build_agent()
     except Exception as e:
-        # Graceful failure: guidance, not a stack trace, when the SDK/model
-        # is absent. This keeps a first run friendly for a new programmer.
         print("Strands SDK not installed or model not configured.")
         print("Install with:  pip install strands-agents strands-agents-tools")
         print("Then set AWS_REGION + BEDROCK_MODEL_ID (see .env.example).")
-        print(f"(import/runtime detail: {e})")
+        print(f"(setup detail: {e})")
         return
-    print(concierge(question))
+
+    # Step 2: ask the model. Failures here happen at call time — most often
+    # expired AWS credentials, the model not being enabled in your region, or
+    # throttling. We print a short, friendly hint instead of a long traceback,
+    # because a new programmer running this for the first time will usually hit
+    # exactly one of these, and a wall of stack frames hides the real cause.
+    try:
+        print(concierge(question))
+    except Exception as e:
+        print("The model call failed. Common causes:")
+        print("  - Expired AWS credentials  -> refresh them (e.g. `aws sso login`)")
+        print("    and check `aws sts get-caller-identity` succeeds.")
+        print("  - Model not enabled in your region -> enable the model in the")
+        print("    Bedrock console for the region in your .env (AWS_REGION).")
+        print("  - Throttling -> wait a moment and try again.")
+        print(f"(error detail: {type(e).__name__}: {e})")
+        return
 
 
 if __name__ == "__main__":
