@@ -1,2 +1,5 @@
 strands-agents==1.58.1
 strands-agents-tools==0.8.9
+# Only needed for the LIVE agent (the OpenAI-compatible/Ollama provider path).
+# The deterministic eval (python evaluation.py) needs none of these.
+openai==1.109.1

@@ -76,9 +76,10 @@ poc-to-prod-demo/
 - **Observability** — one timing line around each tool call in
   `orchestration.py`, with a comment marking where OpenTelemetry spans would go
   in production.
-- **Cost–performance** — the model id is a config value in `.env`, so swapping to
-  a cheaper/faster model is an edit, not a refactor; the semantic layer is read
-  once per answer, keeping the model's context small.
+- **Cost–performance** — the provider and model id are config values in `.env`
+  (`MODEL_PROVIDER`), so swapping to a cheaper/faster model — or to a free local
+  one — is an edit, not a refactor; the semantic layer is read once per answer,
+  keeping the model's context small.
 - **Security guardrails** — inline in `orchestration.py`: source ids are
   validated against the known sources before any file is read, reads are confined
   to the data root, and tool output is treated as data. See the threat model.
@@ -110,25 +111,47 @@ python evaluation.py
 ```
 
 Nine checks print PASS and the run ends with "All eval checks passed." Start here,
-then read the code (next section). The live agent (below) adds the Bedrock model.
+then read the code (next section). The live agent (below) adds the model.
+
+The provider is a config switch (`MODEL_PROVIDER` in `.env`): run against a local
+open-source model with no cloud, or against Amazon Bedrock. The pattern is model-
+and framework-agnostic; swapping providers is an edit, not a refactor.
 
 ## Prerequisites
 
 - Python 3.10+. The deterministic eval needs only the standard library.
-- For the live agent: `pip install -r requirements.txt` and AWS credentials
-  configured for Amazon Bedrock with model access enabled.
+- For the live agent: `pip install -r requirements.txt`.
+- Default (Ollama): a local [Ollama](https://ollama.com) install — no AWS.
+- Alternative (Bedrock): AWS credentials configured for Amazon Bedrock with model
+  access enabled.
 
-## Setup
+## Run it locally with Ollama (default, no AWS)
 
-1. Copy the env template and set your values:
+1. Install [Ollama](https://ollama.com), then pull a model and start the server:
+   ```
+   ollama pull llama3.1
+   ollama serve
+   ```
+2. Copy the env template. The defaults already target Ollama, so no edits needed:
    ```
    cp .env.example .env
-   # Edit .env: set AWS_REGION and a verified, enabled BEDROCK_MODEL_ID
    ```
-2. Install the SDK (for the live agent):
+3. Install the SDK and the OpenAI-compatible client:
    ```
    pip install -r requirements.txt
    ```
+4. Ask the concierge a question:
+   ```
+   python main.py "What AI talks are on Tuesday, who is speaking, and in which room?"
+   ```
+
+### Use Amazon Bedrock instead
+
+Set `MODEL_PROVIDER=bedrock` in `.env`, then set `AWS_REGION` and a verified,
+enabled `BEDROCK_MODEL_ID` (see the commented block in `.env.example`). Configure
+AWS credentials for Bedrock. Run the same `python main.py "..."` command. Model
+ids drift — confirm yours is enabled with
+`aws bedrock list-inference-profiles --region $AWS_REGION` before a demo.
 
 ## Usage
 
@@ -154,7 +177,7 @@ cd "<path to>/poc-to-prod-demo"
 python evaluation.py
 ```
 Add `--model` to additionally score a live agent answer with the same guardrail
-predicates (needs Bedrock):
+predicates (needs a configured provider — Ollama or Bedrock):
 ```
 python evaluation.py --model
 ```

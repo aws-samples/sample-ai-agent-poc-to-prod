@@ -12,6 +12,12 @@
 > and `grep -iE` (macOS/Linux). The eval is invoked the same shell-agnostic way
 > on every OS: `cd` into the project, then `python evaluation.py`.
 
+> **Provider note.** The demo can run entirely against a local open-source model
+> with no AWS: set `MODEL_PROVIDER=ollama` in `.env` (the default), `ollama pull
+> llama3.1`, `ollama serve`, and run the same `python main.py "..."`. The
+> pre-flight model-id / credentials / region checks below apply only to the
+> Bedrock path (`MODEL_PROVIDER=bedrock`).
+
 ---
 
 ## Why this example works for *this* room
