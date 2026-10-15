@@ -23,6 +23,14 @@ It's a conference assistant, demoed at a conference, for people who've spent two
 - [ ] Terminal font ↑ (18pt+), high contrast, window ~110 cols so tables don't wrap
 - [ ] `pip install -r requirements.txt` already done in the venv
 - [ ] `.env` configured (Bedrock creds) — OR plan to run the eval (no model needed) as the live portion
+- [ ] **Verify the model id is current and enabled** — ids get retired (a dead one
+      returns `ResourceNotFoundException`). Confirm `BEDROCK_MODEL_ID` in `.env` is in
+      `aws bedrock list-inference-profiles --region $env:AWS_REGION`, then do ONE live
+      run of `python main.py "..."` to confirm it answers. Do this the morning of.
+- [ ] **Fresh AWS credentials** — `aws sts get-caller-identity` succeeds (expired tokens
+      give `ExpiredTokenException`). Re-auth right before you go on.
+- [ ] **Shell environment is clean** — `AWS_REGION` matches the region where your model
+      is enabled (a stale env var pointing at the wrong region fails even with good creds)
 - [ ] **Fallback video recorded** (full run) and open in a browser tab
 - [ ] Two terminal tabs: (1) project root, (2) `semantic/` open to show
 - [ ] Pre-stage the Beat-4 edit (new track row + session) in a scratch file to paste
