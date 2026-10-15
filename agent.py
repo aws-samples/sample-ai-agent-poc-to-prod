@@ -35,10 +35,12 @@ def load_config() -> dict:
     dict so the agent wiring stays obvious."""
     _load_env(Path(__file__).resolve().parent / ".env")
     return {
-        # Default id is a placeholder — VERIFY against the current Bedrock catalog
-        # and your enabled region before the demo (model ids drift).
+        # Model ids drift — older ones get retired. VERIFY this is enabled in
+        # your account/region before the demo (e.g. `aws bedrock
+        # list-inference-profiles`), and swap it in .env if not. A small, fast
+        # model like Haiku keeps the demo cheap and quick.
         "model_id": os.environ.get("BEDROCK_MODEL_ID",
-                                   "us.anthropic.claude-3-5-haiku-20241022-v1:0"),
+                                   "us.anthropic.claude-haiku-4-5-20251001-v1:0"),
         "region": os.environ.get("AWS_REGION", "us-east-1"),
     }
 
