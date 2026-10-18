@@ -1,11 +1,11 @@
 # On-Stage Demo Script — Conference Schedule Concierge
 
-**Talk:** Designing Production-Grade Agentic Systems: From Prototype to Scalable Infrastructure
-**Session:** Tue Oct 20, 2026 · 12:00–12:30 PM ET · All Things Open (Raleigh)
-**Demo length:** ~5 min (target), 6 min hard cap
-**Tooling:** Strands Agents SDK (open-source), Python, synthetic data — fictional "DevConf 2026", no project names, no internal infra
-**One idea to land:** a reusable, AI-ready data foundation. How data relates belongs in a *governed, served semantic layer*, not in the prompt. Build once, use everywhere.
-**Code:** published to AWS Samples (decided in the Oct 7 Eva sync).
+- **Talk:** Designing Production-Grade Agentic Systems: From Prototype to Scalable Infrastructure
+- **Session:** Tue Oct 20, 2026 · 12:00–12:30 PM ET · All Things Open (Raleigh)
+- **Demo length:** ~5 min (target), 6 min hard cap
+- **Tooling:** Strands Agents SDK (open-source), Python, synthetic data — fictional "DevConf 2026", no project names, no internal infra
+- **One idea to land:** a reusable, AI-ready data foundation. How data relates belongs in a *governed, served semantic layer*, not in the prompt. Build once, use everywhere.
+- **Code:** published to AWS Samples.
 
 > **OS-command note.** The demo laptop may be Windows (PowerShell) or Unix. The
 > Beat-1 structure scan below ships in both forms — `Select-String` (PowerShell)
@@ -139,12 +139,7 @@ tracing stack today."
 ## If the demo is cut for time (30-min reality)
 Drop Beat 4's live edit; say it in one line over the slide. Keep Beats 2–3 (the layer + one run incl. the TBD moment) — that's the irreducible core.
 
-## Co-presenter split
-- Co-presented by both (decided Oct 7).
-- Who narrates which beats and who drives the keyboard: **not decided yet**. Settle at the next sync.
-- One person types, the other narrates; that's smoother than both typing.
-
-## Honesty / framing notes
+## Framing notes
 - Keep narration framework-neutral: Strands is the open-source SDK on screen; the *pattern* is model- and framework-agnostic. Say so.
 - Don't claim the semantic layer is novel — it's a known data concept; the contribution is applying it to agent orchestration and making it runnable + open-source.
 - Everything on screen is a fictional conference — not ATO's real schedule.
