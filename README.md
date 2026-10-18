@@ -119,7 +119,9 @@ and framework-agnostic; swapping providers is an edit, not a refactor.
 
 ## Prerequisites
 
-- Python 3.10+. The deterministic eval needs only the standard library.
+- Python 3.10+. The deterministic eval needs only the standard library. Check
+  it's installed with `python3 --version` (or `python --version`) — either
+  should print `3.10` or higher.
 - For the live agent: `pip install -r requirements.txt`.
 - Default (Ollama): a local [Ollama](https://ollama.com) install — no AWS.
 - Alternative (Bedrock): AWS credentials configured for Amazon Bedrock with model
@@ -127,20 +129,79 @@ and framework-agnostic; swapping providers is an edit, not a refactor.
 
 ## Run it locally with Ollama (default, no AWS)
 
-1. Install [Ollama](https://ollama.com), then pull a model and start the server:
+No AWS account, AWS credentials, or AWS setup of any kind is needed for this
+path — skip the "Use Amazon Bedrock instead" section below entirely.
+
+1. Install Ollama. Pick the installer for your OS from
+   [ollama.com/download](https://ollama.com/download) — there's no single
+   command that works on every OS. On macOS/Linux you can also run:
    ```
-   ollama pull llama3.1
+   curl -fsSL https://ollama.com/install.sh | sh
+   ```
+   Expected output:
+   ```
+   >>> Downloading Ollama for macOS...
+   ######################################################################## 100.0%
+   >>> Installing Ollama to /Applications...
+   >>> Adding 'ollama' command to PATH (may require password)...
+   Password:
+   >>> Starting Ollama...
+   >>> Install complete. You can now run 'ollama'.
+   ```
+   The `Password:` prompt is your own Mac **login password** (the one you use
+   to unlock your laptop) — not an Ollama account or any password tied to this
+   project. It's needed because adding `ollama` to your system PATH requires
+   admin rights. Typing is invisible at this prompt; that's normal, just type
+   and press Enter.
+   The install script also starts the server for you (see "Starting Ollama..."
+   above), and on macOS the Ollama app keeps it running permanently in the
+   background from then on — so you usually don't need to start it yourself.
+   If you're not sure, try:
+   ```
    ollama serve
    ```
-2. Copy the env template. The defaults already target Ollama, so no edits needed:
+   in a **separate terminal tab, and leave it running** (it doesn't return
+   your prompt — that's expected). If you instead see
+   `Error: listen tcp 127.0.0.1:11434: bind: address already in use`, that
+   means a server is already running — skip this step, you're already set,
+   move on to step 2.
+2. Confirm the server is actually reachable before continuing:
+   ```
+   curl http://localhost:11434
+   ```
+   Expected output: `Ollama is running`. If you instead see
+   `curl: (7) Failed to connect...`, the server from step 1 isn't running —
+   go back and start `ollama serve` in its own tab.
+3. Pull the model (back in your original terminal tab). This downloads several
+   GB, so it can take a few minutes depending on your connection:
+   ```
+   ollama pull llama3.1
+   ```
+   Expected output:
+   ```
+   pulling manifest
+   pulling 667b0c1932bc: 100% ▕████████████████████████████████████████▏ 4.9 GB
+   pulling 455f34728c9b: 100% ▕████████████████████████████████████████▏  487 B
+   verifying sha256 digest
+   writing manifest
+   success
+   ```
+4. Copy the env template. The defaults already target Ollama, so no edits needed:
    ```
    cp .env.example .env
    ```
-3. Install the SDK and the OpenAI-compatible client:
+5. If `pip install` fails with `error: externally-managed-environment` (common
+   on macOS with Homebrew Python), create and activate a virtual environment
+   first, then install into that instead:
+   ```
+   python3 -m venv venv
+   source venv/bin/activate
+   ```
+6. Install the SDK and the OpenAI-compatible client:
    ```
    pip install -r requirements.txt
    ```
-4. Ask the concierge a question:
+7. Ask the concierge a question:
    ```
    python main.py "What AI talks are on Tuesday, who is speaking, and in which room?"
    ```
