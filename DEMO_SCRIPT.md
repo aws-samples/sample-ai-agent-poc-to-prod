@@ -51,7 +51,7 @@ It's a conference assistant, demoed at a conference, for people who've spent two
 | 0. Setup | 0:00–0:30 | Project tree (the ~6 flat files) | "One agent, a conference schedule across four sources. The tree **is** the architecture diagram. Watch *where* the logic that relates them lives." |
 | 1. The prototype trap | 0:30–1:30 | `agent.py` prompt | "The naive build hardcodes 'this track is in that room' into the prompt. Works day one; drifts the moment the schedule changes." |
 | 2. The turn — semantic layer | 1:30–3:00 | `semantic/*.md` | "Pull it out into a governed, versioned layer: catalog, term map, join rules. The agent reads it at runtime." |
-| 3. Run it | 3:00–4:00 | `python main.py "..."` | "Same agent. Reads the layer, joins on the keys, cites the source of each fact, and flags the room it can't find as TBD instead of inventing it." |
+| 3. Honesty under missing data | 3:00–4:00 | `python main.py "Where is the Future of Open Source panel?"` | "Same agent. Flags the room it can't find as TBD instead of inventing it." |
 | 4. Build once, use everywhere | 4:00–5:00 | edit `data/`, re-run | "Add a track and a talk by editing the *data*, not the code. Re-run — it just appears." |
 
 ---
@@ -64,42 +64,39 @@ It's a conference assistant, demoed at a conference, for people who've spent two
 > "This is a concierge for a conference — four data sources: the sessions, the tracks, the rooms, and the speakers. Six small files, one per layer — that's the architecture diagram, the tree *is* the diagram, each file reading only the one below it. I'll ask it the kind of thing you've all asked this week: what's on, who's speaking, which room. The whole demo is about one question — where does the agent's knowledge of how these connect actually live?"
 
 ### Beat 1 — The prototype trap (0:30–1:30)
-**Action:** open `agent.py`, show the `SYSTEM_PROMPT`.
+**Action:** run the hardcoded-prompt agent live, change the data under it, rerun.
 **Say:**
-> "In most prototypes it lives in the prompt: 'the AI track is in Room C, speakers are in this file, join them like so.' It works for today's schedule. Then a room changes, a track is added, a talk moves — and the prompt becomes an unversioned, untested place that drifts every edit. That's the prototype that doesn't survive contact with a real, changing schedule."
+> "In most prototypes it lives in the prompt: 'the AI track is in Room C, speakers are in this file, join them like so.' Watch what that does."
+
+```
+python main.py --prototype "What AI talks are on Tuesday, who is speaking, and in which room?"
+```
+> "Workshop Room C — looks right, because it matches today's schedule."
+
+**Action:** edit `data/sessions.csv`, move the two AI track sessions (`S05`,
+`S06`) from room `C` to room `A`. Rerun the exact same command.
+> "I just moved the AI track to a different room. Same prompt, same question, rerun —"
+
+```
+python main.py --prototype "What AI talks are on Tuesday, who is speaking, and in which room?"
+```
+> "— still says Room C. It's frozen on facts baked into the prompt. That's the prototype that doesn't survive contact with a real, changing schedule."
 >
-> *(Point out:)* "Notice our prompt does NOT contain any of that. It names the tools to call and the rules to follow — nothing structural. Let me prove it, and show you where the structure went."
+> *(Then, on the same changed data:)* "Here's the agent we actually built, same question:"
 
-**Structure scan (run it twice — a scan that can only ever return empty proves
-nothing).** The pattern is an **alternation** of three structural tokens. The
-pipe MUST be an **unescaped** `|` so the regex engine reads it as "OR"; an
-escaped `\|` is a *literal pipe* in both PowerShell's .NET regex and `grep -iE`'s
-POSIX ERE, which would turn the pattern into one 25-character literal that never
-matches and silently "pass" against any file.
-
-PowerShell (Windows):
-```powershell
-# positive control — joins.md legitimately contains the structural tokens -> MATCH
-Select-String -Path semantic/joins.md -Pattern 'track_id|room_id|sessions'
-# the proof — the agent prompt carries no structure -> NO MATCHES (empty output)
-Select-String -Path agent.py -Pattern 'track_id|room_id|sessions'
 ```
-
-macOS/Linux:
-```bash
-# positive control -> MATCH
-grep -iE "track_id|room_id|sessions" semantic/joins.md
-# the proof -> nothing printed, exit code 1
-grep -iE "track_id|room_id|sessions" agent.py
+python main.py "What AI talks are on Tuesday, who is speaking, and in which room?"
 ```
+> "Reads the data fresh, every time. No drift."
 
-Escaping note: with `grep -iE` (extended regex) and with `Select-String` (.NET
-regex) the pipe is alternation **only when unescaped**. The `\|` form is correct
-exclusively for *basic* regex (`grep`/`grep -G`), which this demo does not use.
-Do not escape the pipe in either command.
+**(Revert the test edit before Beat 2 — `git checkout data/sessions.csv`, or
+undo the room change — so the rest of the demo runs on the real schedule.)**
 
-Cross-platform alternative (the authoritative proof): `python evaluation.py` —
-check #5 (`prompt_no_structure`) proves the same thing in code.
+**Backup / cross-platform proof (if live editing feels risky on stage):**
+`python evaluation.py` — check #5 (`prompt_no_structure`) proves in code that
+the real agent's prompt carries no schedule structure at all, no live edit
+needed. Keep this as your fallback, not your primary beat — it only proves
+absence, not the actual drift the audience just watched above.
 
 ### Beat 2 — The turn: a served semantic layer (1:30–3:00)
 **Action:** open the three files in `semantic/`, then point at the small source dict in `semantic.py` as the machine-readable mirror of `sources.md`.
@@ -111,12 +108,11 @@ check #5 (`prompt_no_structure`) proves the same thing in code.
 >
 > "This is versioned, reviewable, testable. Any agent — any host — that reads this layer gets the same correct behavior."
 
-### Beat 3 — Run it (3:00–4:00)
-**Action:** `python main.py "What AI talks are on Tuesday, who is speaking, and in which room?"`
+### Beat 3 — Honesty under missing data (3:00–4:00)
+**Action:** `python main.py "Where is the Future of Open Source panel?"`
 **Say:**
-> "It reads the layer, sees it needs the four sources, joins them on the keys, and answers — telling you which source each fact came from. Two AI talks Tuesday, both in Workshop Room C, Sam Okoye speaking."
+> "You already watched it join sources and answer correctly back in Beat 1. Here's the other half of production-grade: what happens when the data's incomplete."
 >
-> *(Then ask the panel question:)* `python main.py "Where is the Future of Open Source panel?"`
 > "Watch this — that panel's room isn't in the room source. A prototype would hallucinate a room. Ours says **room TBD** and tells you why. That honesty *is* the production-grade behavior."
 
 **Fallback (no network):** run `python evaluation.py` — same join/TBD logic, deterministic, no network. Say: "Let me run our eval so you can see the contract hold without trusting the room's wifi." Nine checks print PASS and the suite ends with "All eval checks passed."
