@@ -16,7 +16,11 @@
 > with no AWS: set `MODEL_PROVIDER=ollama` in `.env` (the default), `ollama pull
 > llama3.1`, `ollama serve`, and run the same `python main.py "..."`. The
 > pre-flight model-id / credentials / region checks below apply only to the
-> Bedrock path (`MODEL_PROVIDER=bedrock`).
+> Bedrock path (`MODEL_PROVIDER=bedrock`). For the live/recorded run of this
+> script, Bedrock (Claude Haiku 4.5) is the model actually used — local models
+> tested were inconsistent at this script's exact questions (see
+> `MODEL_EVALUATION.md`), so don't swap to Ollama for the live take without
+> re-verifying each beat first.
 
 ---
 

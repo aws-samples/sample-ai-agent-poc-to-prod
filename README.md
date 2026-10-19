@@ -132,6 +132,11 @@ and framework-agnostic; swapping providers is an edit, not a refactor.
 No AWS account, AWS credentials, or AWS setup of any kind is needed for this
 path — skip the "Use Amazon Bedrock instead" section below entirely.
 
+**Known limitation:** small local models vary widely in how reliably they call
+this project's tools and honor its "say TBD, never invent" guardrail -- see
+[`MODEL_EVALUATION.md`](MODEL_EVALUATION.md) for the actual models tested and
+results. Bedrock was the most consistently correct option in that testing.
+
 1. Install Ollama. Pick the installer for your OS from
    [ollama.com/download](https://ollama.com/download) — there's no single
    command that works on every OS. On macOS/Linux you can also run:
