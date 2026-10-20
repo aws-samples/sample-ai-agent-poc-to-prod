@@ -114,7 +114,9 @@ then read the code (next section). The live agent (below) adds the Bedrock model
 
 ## Prerequisites
 
-- Python 3.10+. The deterministic eval needs only the standard library.
+- Python 3.10+. The deterministic eval needs only the standard library. Check
+  it's installed with `python3 --version` (or `python --version`) — either
+  should print `3.10` or higher.
 - For the live agent: `pip install -r requirements.txt` and AWS credentials
   configured for Amazon Bedrock with model access enabled.
 
@@ -125,7 +127,14 @@ then read the code (next section). The live agent (below) adds the Bedrock model
    cp .env.example .env
    # Edit .env: set AWS_REGION and a verified, enabled BEDROCK_MODEL_ID
    ```
-2. Install the SDK (for the live agent):
+2. If `pip install` fails with `error: externally-managed-environment` (common
+   on macOS with Homebrew Python), create and activate a virtual environment
+   first, then install into that instead:
+   ```
+   python3 -m venv venv
+   source venv/bin/activate
+   ```
+3. Install the SDK (for the live agent):
    ```
    pip install -r requirements.txt
    ```
