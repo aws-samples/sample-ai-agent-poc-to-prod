@@ -1,3 +1,6 @@
+# Pinned for reproducibility. If install fails with "No matching
+# distribution found," these exact versions may be retired --
+# check PyPI for current ones.
 strands-agents==1.58.1
 strands-agents-tools==0.8.9
 # Only needed for the LIVE agent (the OpenAI-compatible/Ollama provider path).
