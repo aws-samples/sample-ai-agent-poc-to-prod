@@ -155,6 +155,27 @@ Example queries:
 If the SDK is not installed or the model is not configured, `main.py` prints
 install/config guidance and exits cleanly.
 
+### See the prototype trap live with `--prototype`
+
+Add `--prototype` to run the OTHER agent — the hardcoded-prompt anti-pattern
+this project exists to fix (see `agent.py`'s `PROTOTYPE_SYSTEM_PROMPT`), instead
+of the semantic-layer agent above. It answers from facts baked into its prompt
+and never looks at `data/`, so it drifts the moment the schedule changes:
+
+```
+# 1. Hardcoded prompt, today's data — looks correct (coincidentally):
+python main.py --prototype "What AI talks are on Tuesday, who is speaking, and in which room?"
+
+# 2. Edit the data — e.g. move the AI track to a different room in
+#    data/sessions.csv — then rerun the SAME command:
+python main.py --prototype "What AI talks are on Tuesday, who is speaking, and in which room?"
+#    -> still answers the OLD room. Same file, same question, now wrong.
+
+# 3. The semantic-layer agent on the SAME changed data:
+python main.py "What AI talks are on Tuesday, who is speaking, and in which room?"
+#    -> reads data/ at runtime, so it reflects the change instead of drifting.
+```
+
 ## Running the eval
 
 Deterministic contract + scoring checks — nine checks, no model and no network:
