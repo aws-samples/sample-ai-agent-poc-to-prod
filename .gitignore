@@ -6,5 +6,9 @@ venv/
 build.log
 .DS_Store
 
+# Working task list for this conversion -- internal tracking, not part of the
+# published sample
+TASKS.md
+
 # Internal agent working files (design, plans, reviews) — not part of the shared sample
 .agents/
