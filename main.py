@@ -32,7 +32,9 @@ def main():
     # because a new programmer running this for the first time will usually hit
     # exactly one of these, and a wall of stack frames hides the real cause.
     try:
-        print(concierge(question))
+        # Strands already streams the agent's output to stdout as it generates,
+        # so printing the return value here would print the same answer twice.
+        concierge(question)
     except Exception as e:
         print("The model call failed. Common causes:")
         print("  - Expired AWS credentials  -> refresh them (e.g. `aws sso login`)")
