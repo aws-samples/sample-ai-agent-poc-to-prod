@@ -34,7 +34,7 @@ def main():
         concierge = build_agent(prototype=prototype)
     except Exception as e:
         print("Strands SDK not installed or model not configured.")
-        print("Install with:  pip install strands-agents strands-agents-tools")
+        print("Install with:  pip install -r requirements.txt")
         print("Then set AWS_REGION + BEDROCK_MODEL_ID (see .env.example).")
         print(f"(setup detail: {e})")
         return
