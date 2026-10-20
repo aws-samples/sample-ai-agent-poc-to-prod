@@ -157,9 +157,6 @@ tracing stack today."
 
 ---
 
-## If the demo is cut for time (30-min reality)
-Drop Beat 4's live edit; say it in one line over the slide. Keep Beats 2–3 (the layer + one run incl. the TBD moment) — that's the irreducible core.
-
 ## Framing notes
 - Keep narration framework-neutral: Strands is the open-source SDK on screen; the *pattern* is model- and framework-agnostic. Say so.
 - Don't claim the semantic layer is novel — it's a known data concept; the contribution is applying it to agent orchestration and making it runnable + open-source.
