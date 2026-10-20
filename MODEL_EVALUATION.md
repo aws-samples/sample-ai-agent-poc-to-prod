@@ -147,34 +147,33 @@ This was debugging, written down -- not a controlled experiment. Specifically:
 - **n=1.** Each model/question pair was run exactly once. No repeated trials,
   so nothing here distinguishes a consistent failure from a one-off bad
   sample.
-- **No Bedrock/Claude baseline.** AWS credentials available in this
-  environment (`sca-gamma-readonly`) were both expired/invalid and, on
-  reflection, likely the wrong kind of credential for a public sample-code
-  repo to depend on in the first place. The comparison this project actually
-  needs -- local open-source models vs. the Bedrock default -- is entirely
-  missing from this document.
+- **The Bedrock baseline (above) was a single clean run per question**, not
+  an iterated debugging process like the local-model results, and its
+  generation config (e.g. `temperature`) was not pinned the same way it later
+  was for the local models. Not a fully controlled comparison either.
 
 ## Future improvements for a formal evaluation
 
 In priority order, if this is picked back up after the talk:
 
-1. **Add a Bedrock/Claude baseline.** Set up a real (non-internal) AWS
-   account with Bedrock model access, and run the same question set against
-   it. This is the comparison stakeholders will actually ask for.
-2. **Hold generation config constant across every provider**, including
-   Bedrock -- `temperature=0` is currently only set in `agent.py`'s Ollama
-   branch.
-3. **Freeze the system prompt before testing**, and treat any prompt change
+1. **Re-run everything with `temperature=0` already active from the start.**
+   It's now pinned for both providers in `agent.py`, but every result in
+   this document predates that for at least one of the two runs it's
+   compared against (the local models got it partway through their testing;
+   the Bedrock baseline predates it entirely). A from-scratch synchronized
+   re-run under identical, already-pinned config would make this an actual
+   apples-to-apples comparison instead of a reconstructed one.
+2. **Freeze the system prompt before testing**, and treat any prompt change
    as a new experiment, not a patch to the current one.
-4. **Score with code, not eyes.** Extend `evaluation.py --model`'s existing
+3. **Score with code, not eyes.** Extend `evaluation.py --model`'s existing
    guardrail predicates into a loop over every model, so correctness is a
    deterministic pass/fail, not a prose judgment.
-5. **Run each model/question pair multiple times** (e.g. n=5) to separate
+4. **Run each model/question pair multiple times** (e.g. n=5) to separate
    consistent failures from noise.
-6. **Expand the question set** beyond the 3 demo questions -- at minimum, one
+5. **Expand the question set** beyond the 3 demo questions -- at minimum, one
    more honesty/TBD case and one more multi-source join, so Question 2's
    result isn't resting on a single example.
-7. **Consider a code-level backstop** instead of (or alongside) prompt
+6. **Consider a code-level backstop** instead of (or alongside) prompt
    engineering -- e.g. don't let the agent finalize an answer until it has
    called `query_source` for every source in the catalog, enforced in
    `orchestration.py` rather than requested in the prompt. This is likely more
