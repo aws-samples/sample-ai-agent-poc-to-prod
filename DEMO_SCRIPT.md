@@ -130,7 +130,7 @@ watched above.
 >
 > "Watch this — that panel's room isn't in the room source. A prototype would hallucinate a room. Ours says **room TBD** and tells you why. That honesty *is* the production-grade behavior."
 
-**Fallback (no network):** run `python evaluation.py` — same join/TBD logic, deterministic, no network. Say: "Let me run our eval so you can see the contract hold without trusting the room's wifi." Nine checks print PASS and the suite ends with "All eval checks passed."
+**Fallback (no network):** run `python evaluation.py` — same join/TBD logic, deterministic, no network. Say: "Let me run our eval so you can see the contract hold without trusting the room's wifi." Eleven checks print PASS and the suite ends with "All eval checks passed."
 
 **Observability beat (optional, ~10s):** point at the `[timing]` line each tool
 call prints — "that one timing line is the seam: in production this is exactly

@@ -68,7 +68,7 @@ poc-to-prod-demo/
 
 ## The five production themes — where each one lives
 
-- **Evaluation & scoring** — `evaluation.py`. Nine deterministic checks (no
+- **Evaluation & scoring** — `evaluation.py`. Eleven deterministic checks (no
   model, no network) prove the layer is served, sources load, talks enrich on the
   documented keys, missing data is flagged TBD, and the prompt carries no
   structure — plus guardrail scoring that rejects uncited/hidden-partial/invented
@@ -109,7 +109,7 @@ cd "<path to>/poc-to-prod-demo"
 python evaluation.py
 ```
 
-Nine checks print PASS and the run ends with "All eval checks passed." Start here,
+Eleven checks print PASS and the run ends with "All eval checks passed." Start here,
 then read the code (next section). The live agent (below) adds the Bedrock model.
 
 ## Prerequisites
@@ -180,7 +180,7 @@ python main.py "What AI talks are on Tuesday, who is speaking, and in which room
 
 ## Running the eval
 
-Deterministic contract + scoring checks — nine checks, no model and no network:
+Deterministic contract + scoring checks — eleven checks, no model and no network:
 ```
 cd "<path to>/poc-to-prod-demo"
 python evaluation.py
