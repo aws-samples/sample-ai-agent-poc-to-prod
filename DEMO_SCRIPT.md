@@ -1,11 +1,11 @@
 # On-Stage Demo Script — Conference Schedule Concierge
 
-**Talk:** Designing Production-Grade Agentic Systems: From Prototype to Scalable Infrastructure
-**Session:** Tue Oct 20, 2026 · 12:00–12:30 PM ET · All Things Open (Raleigh)
-**Demo length:** ~5 min (target), 6 min hard cap
-**Tooling:** Strands Agents SDK (open-source), Python, synthetic data — fictional "DevConf 2026", no project names, no internal infra
-**One idea to land:** a reusable, AI-ready data foundation. How data relates belongs in a *governed, served semantic layer*, not in the prompt. Build once, use everywhere.
-**Code:** published to AWS Samples.
+- **Talk:** Designing Production-Grade Agentic Systems: From Prototype to Scalable Infrastructure
+- **Session:** Tue Oct 20, 2026 · 12:00–12:30 PM ET · All Things Open (Raleigh)
+- **Demo length:** ~5 min (target), 6 min hard cap
+- **Tooling:** Strands Agents SDK (open-source), Python, synthetic data — fictional "DevConf 2026", no project names, no internal infra
+- **One idea to land:** a reusable, AI-ready data foundation. How data relates belongs in a *governed, served semantic layer*, not in the prompt. Build once, use everywhere.
+- **Code:** published to AWS Samples.
 
 > **OS-command note.** The demo laptop may be Windows (PowerShell) or Unix. The
 > Beat-1 structure scan below ships in both forms — `Select-String` (PowerShell)
