@@ -92,6 +92,15 @@ MUST be an **unescaped** `|` so the regex engine reads it as "OR" (an escaped
 `\|` is a literal pipe in both PowerShell's .NET regex and `grep -iE`'s POSIX
 ERE, which would silently "pass" against any file).
 
+PowerShell (Windows):
+```powershell
+# positive control — joins.md legitimately contains the structural tokens -> MATCH
+Select-String -Path semantic/joins.md -Pattern 'track_id|room_id|sessions'
+# the proof — the agent prompt carries no structure -> NO MATCHES (empty output)
+Select-String -Path agent.py -Pattern 'track_id|room_id|sessions'
+```
+
+macOS/Linux:
 ```bash
 # positive control -> MATCH
 grep -iE "track_id|room_id|sessions" semantic/joins.md
