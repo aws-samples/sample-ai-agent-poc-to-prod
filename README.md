@@ -118,7 +118,9 @@ then read the code (next section). The live agent (below) adds the Bedrock model
   it's installed with `python3 --version` (or `python --version`) — either
   should print `3.10` or higher.
 - For the live agent: `pip install -r requirements.txt` and AWS credentials
-  configured for Amazon Bedrock with model access enabled.
+  configured for Amazon Bedrock with model access enabled. New to AWS? See
+  [BEDROCK_SETUP.md](BEDROCK_SETUP.md) for a full walkthrough (IAM user,
+  access keys, AWS CLI, verifying model access).
 
 ## Setup
 
