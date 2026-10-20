@@ -56,17 +56,45 @@ SYSTEM_PROMPT = (
     "never invent one and never present an incomplete answer as if it were complete."
 )
 
+# THE PROTOTYPE TRAP, made runnable. This hardcodes today's schedule facts
+# straight into the prompt -- exactly the anti-pattern SYSTEM_PROMPT above
+# avoids. It matches data/*.csv right now (AI & Agents -> Workshop Room C,
+# Sam Okoye), so a first run looks correct. Edit the data (move the AI track to
+# a different room, add a session) and rerun with the SAME prompt: the answer
+# stays frozen on these hardcoded facts and silently drifts from reality. No
+# tools are given here on purpose -- the whole point is that this prompt
+# believes it already knows the schedule and never needs to look anything up.
+PROTOTYPE_SYSTEM_PROMPT = (
+    "You are a helpful conference schedule concierge. Here is the schedule, "
+    "hardcoded directly into your instructions: the AI & Agents track runs in "
+    "Workshop Room C. On Tuesday the AI track has two talks -- 'Building AI "
+    "Agents 101' (10:00-10:45) and 'Production-Grade Agent Architectures' "
+    "(11:00-11:45) -- both presented by Sam Okoye. Answer attendee questions "
+    "directly from this knowledge. You already know the schedule; there is "
+    "nothing to look up."
+)
 
-def build_agent(config: dict | None = None):
-    """Build the Strands agent. Importing strands here (not at module top) keeps
-    the module importable with the SDK uninstalled, so the deterministic eval
-    still runs."""
+
+def build_agent(config: dict | None = None, prototype: bool = False):
+    """Build the Strands agent.
+
+    prototype=True builds the hardcoded-prompt version (PROTOTYPE_SYSTEM_PROMPT,
+    no tools) instead of the semantic-layer version (SYSTEM_PROMPT, with
+    get_semantic_layer/query_source) -- see main.py's --prototype flag.
+
+    Importing strands here (not at module top) keeps the module importable
+    with the SDK uninstalled, so the deterministic eval still runs."""
     config = config or load_config()
     from strands import Agent
     from strands.models import BedrockModel
-    from orchestration import get_semantic_layer, query_source
+
+    if prototype:
+        system_prompt, tools = PROTOTYPE_SYSTEM_PROMPT, []
+    else:
+        from orchestration import get_semantic_layer, query_source
+        system_prompt, tools = SYSTEM_PROMPT, [get_semantic_layer, query_source]
+
     # temperature=0: without it, answer wording (not substance) varied run to
     # run on the same question -- pinning it makes demo takes reproducible.
     model = BedrockModel(model_id=config["model_id"], temperature=0)
-    return Agent(system_prompt=SYSTEM_PROMPT, model=model,
-                 tools=[get_semantic_layer, query_source])
+    return Agent(system_prompt=system_prompt, model=model, tools=tools)

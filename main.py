@@ -6,19 +6,32 @@ structure in its prompt. This file just builds the agent and asks it a question.
 
 Run:
     python main.py "What AI talks are on Tuesday, and which rooms?"
+
+Add --prototype to run the OTHER version instead -- the hardcoded-prompt
+anti-pattern this project exists to fix (see agent.py's PROTOTYPE_SYSTEM_PROMPT).
+Use it to see the before/after live:
+    python main.py --prototype "..."   # hardcoded facts, no data lookup
+    # now edit data/*.csv (e.g. move the AI track to a different room)
+    python main.py --prototype "..."   # SAME prompt, SAME question -> now wrong
+    python main.py "..."               # semantic-layer version -> stays correct
 """
 import sys
 
 
 def main():
-    question = " ".join(sys.argv[1:]) or \
+    args = sys.argv[1:]
+    prototype = "--prototype" in args
+    args = [a for a in args if a != "--prototype"]
+    question = " ".join(args) or \
         "What AI talks are on Tuesday, who is speaking, and in which room?"
+
+    print(f"[mode: {'prototype (hardcoded prompt, no tools)' if prototype else 'semantic layer'}]")
 
     # Step 1: build the agent. Failures here are setup problems — the SDK is not
     # installed, or the model/config is missing.
     try:
         from agent import build_agent
-        concierge = build_agent()
+        concierge = build_agent(prototype=prototype)
     except Exception as e:
         print("Strands SDK not installed or model not configured.")
         print("Install with:  pip install strands-agents strands-agents-tools")
