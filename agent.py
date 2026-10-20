@@ -58,11 +58,15 @@ SYSTEM_PROMPT = (
 
 
 def build_agent(config: dict | None = None):
-    """Build the Strands agent. Uses the default-provider path (pass the model id
-    string). Importing strands here (not at module top) keeps the module
-    importable with the SDK uninstalled, so the deterministic eval still runs."""
+    """Build the Strands agent. Importing strands here (not at module top) keeps
+    the module importable with the SDK uninstalled, so the deterministic eval
+    still runs."""
     config = config or load_config()
     from strands import Agent
+    from strands.models import BedrockModel
     from orchestration import get_semantic_layer, query_source
-    return Agent(system_prompt=SYSTEM_PROMPT, model=config["model_id"],
+    # temperature=0: without it, answer wording (not substance) varied run to
+    # run on the same question -- pinning it makes demo takes reproducible.
+    model = BedrockModel(model_id=config["model_id"], temperature=0)
+    return Agent(system_prompt=SYSTEM_PROMPT, model=model,
                  tools=[get_semantic_layer, query_source])
