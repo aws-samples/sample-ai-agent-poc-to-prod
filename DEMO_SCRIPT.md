@@ -96,11 +96,32 @@ python main.py "What AI talks are on Tuesday, who is speaking, and in which room
 **(Revert the test edit before Beat 2 — `git checkout data/sessions.csv`, or
 undo the room change — so the rest of the demo runs on the real schedule.)**
 
-**Backup / cross-platform proof (if live editing feels risky on stage):**
-`python evaluation.py` — check #5 (`prompt_no_structure`) proves in code that
-the real agent's prompt carries no schedule structure at all, no live edit
-needed. Keep this as your fallback, not your primary beat — it only proves
-absence, not the actual drift the audience just watched above.
+**Backup / cross-platform proof (if live editing feels risky on stage):** the
+pattern below is an **alternation** of three structural tokens -- the pipe
+MUST be an **unescaped** `|` so the regex engine reads it as "OR" (an escaped
+`\|` is a literal pipe in both PowerShell's .NET regex and `grep -iE`'s POSIX
+ERE, which would silently "pass" against any file).
+
+PowerShell (Windows):
+```powershell
+# positive control — joins.md legitimately contains the structural tokens -> MATCH
+Select-String -Path semantic/joins.md -Pattern 'track_id|room_id|sessions'
+# the proof — the agent prompt carries no structure -> NO MATCHES (empty output)
+Select-String -Path agent.py -Pattern 'track_id|room_id|sessions'
+```
+
+macOS/Linux:
+```bash
+# positive control -> MATCH
+grep -iE "track_id|room_id|sessions" semantic/joins.md
+# the proof -> nothing printed, exit code 1
+grep -iE "track_id|room_id|sessions" agent.py
+```
+
+Or run `python evaluation.py` — check #5 (`prompt_no_structure`) proves the
+same thing in code, no live edit needed. Keep this as your fallback, not your
+primary beat — it only proves absence, not the actual drift the audience just
+watched above.
 
 ### Beat 2 — The turn: a served semantic layer (1:30–3:00)
 **Action:** open the three files in `semantic/`, then point at the small source dict in `semantic.py` as the machine-readable mirror of `sources.md`.
@@ -119,7 +140,7 @@ absence, not the actual drift the audience just watched above.
 >
 > "Watch this — that panel's room isn't in the room source. A prototype would hallucinate a room. Ours says **room TBD** and tells you why. That honesty *is* the production-grade behavior."
 
-**Fallback (no network):** run `python evaluation.py` — same join/TBD logic, deterministic, no network. Say: "Let me run our eval so you can see the contract hold without trusting the room's wifi." Nine checks print PASS and the suite ends with "All eval checks passed."
+**Fallback (no network):** run `python evaluation.py` — same join/TBD logic, deterministic, no network. Say: "Let me run our eval so you can see the contract hold without trusting the room's wifi." Eleven checks print PASS and the suite ends with "All eval checks passed."
 
 **Observability beat (optional, ~10s):** point at the `[timing]` line each tool
 call prints — "that one timing line is the seam: in production this is exactly
